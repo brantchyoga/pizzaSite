@@ -5,3 +5,7 @@
 #zip {
   display: none;
 }
+#text {
+  font-size: 20px;
+  font-family: fantasy;
+}

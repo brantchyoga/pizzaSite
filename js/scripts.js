@@ -6,18 +6,22 @@ function userPizza (crust, toppings, size){
 }
 
 userPizza.prototype.price = function(price) {
+  var pizzaPriceStart = this.size;
+  var tax = 1.1;
   for (i=1;i<=this.toppings.length;i++){
     var numberOfToppings = i;
   }
-  console.log(numberOfToppings);
-  var pizzaPrice = (numberOfToppings + this.size + delivery) * 1.1;
-  console.log(pizzaPrice);
-  return pizzaPrice.toFixed(2);
+  if (this.crust === "GlutenFree") {
+    var pizzaPriceG =  (pizzaPriceStart + 3 + numberOfToppings)*tax;
+    return pizzaPriceG;
+ } else if (numberOfToppings <= 3) {
+   var pizzaPrice = (pizzaPriceStart + numberOfToppings)*tax;
+   return pizzaPrice;
+ } else {
+   return (pizzaPriceStart)*tax;
+ }
 }
 
-function my() {
-  location.reload(true)
-}
 var delivery = 0;
 
 function location (zip){
@@ -25,22 +29,17 @@ function location (zip){
     $("#make").show();
     $("#get, #zip").hide();
     delivery=5;
-    console.log(delivery)
   } else {
     alert("You are outside Brantch's Delivery Range, Please come in for Carryout")
     my();
   }
 }
 
-
-
-
 // userinterface
 $(function(){
   $("form#get").submit(function(event){
     event.preventDefault();
     var getPizza = $("#getting").val();
-    console.log(getPizza);
     if (getPizza === "Delivery"){
       $("#zip").show();
     } else {
@@ -52,7 +51,6 @@ $(function(){
     event.preventDefault();
     var userStreet = $("#address").val();
     var userZip = parseInt($("#inputZip").val());
-    console.log(userZip);
     location(userZip);
   })
   $("form#make").submit(function(event){
@@ -62,14 +60,15 @@ $(function(){
       var toppingChoice = $(this).val();
       toppings.push(toppingChoice);
     })
-    console.log(toppings);
+
     var size = parseInt($("#sizes").val());
-    console.log(size);
+
     var crust = $("#crusts").val();
-    console.log(crust);
+
     var pizzaChoice = new userPizza (crust, toppings, size);
-    console.log(pizzaChoice);
-    var pizzaPrice = pizzaChoice.price();
-    console.log(pizzaPrice);
+
+    var pizzaPriceFinal = pizzaChoice.price();
+
+    $("#text").text("Your pizza is " + size + " inches and includes Cheese, " + toppings.join(", ") + " with a " + crust + " crust. It will cost $" + pizzaPriceFinal.toFixed(2) +".");
   })
 })
